@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
+import { motion, useAnimation } from "framer-motion";
 
 const Nav = styled.nav`
   display: flex;
@@ -40,6 +41,18 @@ const Item = styled.li`
   justify-content: center;
   line-height: 25px;
   font-weight: bold;
+  position: relative;
+`;
+
+const Underline = styled(motion.span)`
+  position: absolute;
+  height: 2px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: -2px;
+  background-color: #8855ff;
+  border-radius: 1px;
 `;
 
 const Button = styled.button`
@@ -54,19 +67,29 @@ const Button = styled.button`
 `;
 
 export default function Header() {
+  const homeMatch = useMatch("/");
+  const drugMatch = useMatch("/drugs");
+  const communityMatch = useMatch("/community");
+
   return (
     <Nav>
       <Col>
         <Logo>PillHarmonic</Logo>
         <Items>
           <Item>
-            <Link to='/'>Home</Link>
+            <Link to='/'>
+              Home{homeMatch && <Underline layoutId='underline' />}
+            </Link>
           </Item>
           <Item>
-            <Link to='/'>Drugs</Link>
+            <Link to='/drugs'>
+              Drugs{drugMatch && <Underline layoutId='underline' />}
+            </Link>
           </Item>
           <Item>
-            <Link to='/'>Community</Link>
+            <Link to='/community'>
+              Community{communityMatch && <Underline layoutId='underline' />}
+            </Link>
           </Item>
         </Items>
       </Col>

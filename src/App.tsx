@@ -4,6 +4,8 @@ import Root from "./routes/Root";
 import Main from "./routes/Main";
 import Error from "./components/Error";
 import Login from "./routes/Login";
+import Community from "./components/Community";
+import Drugs from "./components/Drugs";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,6 +21,14 @@ function App() {
         {
           path: "/login",
           element: <Login />,
+        },
+        {
+          path: "/drugs",
+          element: <Drugs />,
+        },
+        {
+          path: "/community",
+          element: <Community />,
         },
       ],
     },
