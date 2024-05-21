@@ -5,7 +5,7 @@ import Main from "./routes/Main";
 import Error from "./components/Error";
 import Login from "./routes/Login";
 import Community from "./components/Community";
-import Drugs from "./components/Drugs";
+import Drugs from "./routes/Drugs";
 
 function App() {
   const router = createBrowserRouter([
