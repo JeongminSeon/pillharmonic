@@ -19,7 +19,8 @@ const ITEMS_PER_PAGE = 10;
 
 const Container = styled.div`
   text-align: center;
-  padding: 20px;
+
+  margin-top: 50px;
 `;
 
 export default function Drugs() {
@@ -52,11 +53,11 @@ export default function Drugs() {
 
   return (
     <Container>
-      <DrugSearch
+      {/* <DrugSearch
         query={query}
         setQuery={setQuery}
         handleSearch={handleSearch}
-      />
+      /> */}
       <DrugUpload />
       <DrugList drugs={drugs} />
       <Pagination

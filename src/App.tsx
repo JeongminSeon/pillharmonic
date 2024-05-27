@@ -6,6 +6,7 @@ import Error from "./components/Error";
 import Login from "./routes/Login";
 import Community from "./components/Community";
 import Drugs from "./routes/Drugs";
+import DrugDetail from "./components/DrugDetail";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +26,10 @@ function App() {
         {
           path: "/drugs",
           element: <Drugs />,
+        },
+        {
+          path: "/drugs/:id",
+          element: <DrugDetail />,
         },
         {
           path: "/community",
