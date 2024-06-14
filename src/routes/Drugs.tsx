@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import DrugSearch from "../components/DrugSearch";
 import { searchDrug, getDrugList } from "../services/api";
-import DrugList from "../components/DrugList";
+
 import DrugUpload from "../components/DrugUpload";
 import { uploadDrugImage } from "../services/api";
 import Pagination from "../components/Pagination";
@@ -20,7 +20,7 @@ const ITEMS_PER_PAGE = 10;
 const Container = styled.div`
   text-align: center;
 
-  margin-top: 50px;
+  margin-top: 150px;
 `;
 
 export default function Drugs() {
@@ -59,12 +59,6 @@ export default function Drugs() {
         handleSearch={handleSearch}
       /> */}
       <DrugUpload />
-      <DrugList drugs={drugs} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
     </Container>
   );
 }

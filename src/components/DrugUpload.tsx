@@ -1,118 +1,171 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { uploadDrugImage } from "../services/api"; // API 함수 임포트
 
-const Container = styled.div`
+const UploadContainer = styled.div`
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  padding: 20px;
+  margin: 50px auto;
+  text-align: center;
+`;
+
+const UploadBox = styled.div`
+  border: 2px dashed #cccccc;
+  padding: 20px;
+  border-radius: 10px;
   margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
 `;
 
-const FileInputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+const UploadText = styled.p`
+  margin: 10px 0;
+`;
+
+const BrowseLink = styled.span`
+  color: #007bff;
+  cursor: pointer;
+`;
+
+const SupportedFormats = styled.p`
+  color: #666666;
+  font-size: 0.9em;
+`;
+
+const FileInput = styled.input`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  justify-content: center;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 `;
 
-const FileInputLabel = styled.label`
-  padding: 10px 20px;
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.9em;
+  margin-top: 10px;
+`;
+
+const UrlUpload = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const UrlInput = styled.input`
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  width: 70%;
+  margin-right: 10px;
+`;
+
+const UploadButton = styled.button`
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 10px 20px;
   cursor: pointer;
-  margin-right: 10px;
 
   &:hover {
     background-color: #0056b3;
   }
 `;
 
-const HiddenFileInput = styled.input`
-  display: none;
+const Actions = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
-const UploadButton = styled.button`
+const ActionButton = styled.button`
+  background-color: #f1f1f1;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
   padding: 10px 20px;
-  border: none;
-  background-color: #28a745;
-  color: white;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-  margin-left: 10px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #e0e0e0;
   }
 `;
 
-const FileNameContainer = styled.div`
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  width: 250px;
-  text-align: center;
-`;
-
-const FileName = styled.div<{ isFileSelected: boolean }>`
-  font-size: 14px;
-  color: ${({ isFileSelected }) => (isFileSelected ? "black" : "red")};
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  z-index: 9999;
 `;
 
 export default function DrugUpload() {
-  const [file, setFile] = useState<File | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFile = e.target.files[0];
-      if (selectedFile && selectedFile.type.startsWith("image/")) {
-        setFile(selectedFile);
-        setErrorMessage(null);
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type.startsWith("image/")) {
+        setLoading(true);
+        setTimeout(() => {
+          window.location.href = "/drug-detail";
+        }, 2000);
       } else {
-        setFile(null);
-        setErrorMessage("Please upload an image file.");
+        setError("잘못된 파일을 올렸습니다.");
       }
     }
   };
 
-  const handleUpload = async () => {
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
     if (file) {
-      const response = await uploadDrugImage(file);
-      if (response.ok) {
-        setUploadStatus("Upload successful");
+      if (file.type.startsWith("image/")) {
+        setLoading(true);
+        setTimeout(() => {
+          window.location.href = "/drug-detail";
+        }, 2000);
       } else {
-        setUploadStatus(`Upload failed: ${response.error}`);
+        setError("잘못된 파일을 올렸습니다.");
       }
     }
   };
 
   return (
-    <Container>
-      <FileInputContainer>
-        <FileInputLabel htmlFor='fileUpload'>Choose File</FileInputLabel>
-        <HiddenFileInput
-          type='file'
-          id='fileUpload'
-          onChange={handleFileChange}
-        />
-        <FileNameContainer>
-          {errorMessage ? (
-            <FileName isFileSelected={false}>{errorMessage}</FileName>
-          ) : (
-            <FileName isFileSelected={!!file}>
-              {file ? `Selected file: ${file.name}` : "No file selected"}
-            </FileName>
-          )}
-        </FileNameContainer>
-        <UploadButton onClick={handleUpload}>Upload</UploadButton>
-      </FileInputContainer>
-      {uploadStatus && <div>{uploadStatus}</div>}
-    </Container>
+    <UploadContainer>
+      {loading && <LoadingOverlay>Loading...</LoadingOverlay>}
+      <h2>Upload Photos</h2>
+      <UploadBox onDragOver={handleDragOver} onDrop={handleDrop}>
+        <UploadText>
+          Drop your image here, or <BrowseLink>browse</BrowseLink>
+        </UploadText>
+        <SupportedFormats>Supports: PNG, JPG, JPEG, WEBP</SupportedFormats>
+        <FileInput type='file' onChange={handleFileUpload} />
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+      </UploadBox>
+      <UploadText>or</UploadText>
+      <UrlUpload>
+        <UrlInput type='text' placeholder='Add file URL' />
+        <UploadButton>Upload</UploadButton>
+      </UrlUpload>
+      <Actions>
+        <ActionButton>Cancel</ActionButton>
+        <ActionButton>Done</ActionButton>
+      </Actions>
+    </UploadContainer>
   );
 }

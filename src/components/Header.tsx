@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Link, useMatch } from "react-router-dom";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 
-const Nav = styled.nav`
+const Nav = styled.nav<{ scrolled: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,7 +13,13 @@ const Nav = styled.nav`
   padding: 15px 40px;
   position: fixed;
   top: 0;
-  color: white;
+  background-color: ${({ scrolled }) => (scrolled ? "#043CAA" : "transparent")};
+  backdrop-filter: ${({ scrolled }) => (scrolled ? "blur(20px)" : "none")};
+  box-shadow: ${({ scrolled }) =>
+    scrolled ? "0 2px 4px rgba(0, 0, 0, 0.1)" : "none"};
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease,
+    box-shadow 0.3s ease;
+  z-index: 1000;
 `;
 
 const Col = styled.div`
@@ -21,7 +27,6 @@ const Col = styled.div`
   align-items: center;
 `;
 
-//Logo 추가 ?
 const Logo = styled.span`
   width: 95px;
   line-height: 25px;
@@ -67,12 +72,26 @@ const Button = styled.button`
 `;
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const homeMatch = useMatch("/");
   const drugMatch = useMatch("/drugs");
   const communityMatch = useMatch("/community");
+  const listMatch = useMatch("/list");
 
   return (
-    <Nav>
+    <Nav scrolled={scrolled}>
       <Col>
         <Logo>PillHarmonic</Logo>
         <Items>
@@ -89,6 +108,11 @@ export default function Header() {
           <Item>
             <Link to='/community'>
               Community{communityMatch && <Underline layoutId='underline' />}
+            </Link>
+          </Item>
+          <Item>
+            <Link to='/list'>
+              List{listMatch && <Underline layoutId='underline' />}
             </Link>
           </Item>
         </Items>

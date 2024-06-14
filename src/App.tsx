@@ -7,6 +7,7 @@ import Login from "./routes/Login";
 import Community from "./components/Community";
 import Drugs from "./routes/Drugs";
 import DrugDetail from "./components/DrugDetail";
+import DrugList from "./routes/DrugList";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,12 +29,16 @@ function App() {
           element: <Drugs />,
         },
         {
-          path: "/drugs/:id",
+          path: "/drug-detail",
           element: <DrugDetail />,
         },
         {
           path: "/community",
           element: <Community />,
+        },
+        {
+          path: "list",
+          element: <DrugList />,
         },
       ],
     },
